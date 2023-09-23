@@ -2,6 +2,7 @@
 import {
   CheckboxContainer,
   CheckboxItem,
+  SpinContainer,
   TaskContainer,
   TaskContainerHeader,
   TaskItemsContainer,
@@ -11,8 +12,8 @@ import {
   useGetAllTaskQuery,
   useUpdateTaskMutation,
 } from "@lib/redux/task/index";
-import { Button, Checkbox, Pagination } from "antd";
-import React, { useState } from "react";
+import { Button, Checkbox, Empty, Pagination, Spin, notification } from "antd";
+import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Task, TaskStatus } from "@lib/redux/task/types";
 import { CreateTaskModal } from "@/components/modals/createTask/CreateTaskModal";
@@ -39,7 +40,7 @@ const checkBoxItems = [
 ];
 
 export const Tasks: React.FC = () => {
-  const TASK_PER_PAGE = 12;
+  const TASKS_PER_PAGE = 12;
   const { push } = useRouter();
   const { get } = useSearchParams();
   const [updateTask] = useUpdateTaskMutation();
@@ -61,6 +62,11 @@ export const Tasks: React.FC = () => {
 
   const handleDeleteTask = (id: string) => {
     deleteTask(id);
+    notification.open({
+      message: "Task deleted",
+      placement: "top",
+      type: "success",
+    });
   };
 
   const handleUpdateTask = (task: Task) => {
@@ -70,6 +76,13 @@ export const Tasks: React.FC = () => {
   const handleChangePage = (page: number) => {
     push(`/?page=${page}`);
   };
+
+  useEffect(() => {
+    const currentPage = Number(get("page")) || 1;
+    if (data?.tasks.length === 0 && currentPage > 1) {
+      push(`/?page=${currentPage - 1}`);
+    }
+  }, [data?.count]);
 
   return (
     <TaskContainer>
@@ -99,24 +112,34 @@ export const Tasks: React.FC = () => {
           ))}
         </CheckboxContainer>
       </TaskContainerHeader>
-      <TaskItemsContainer>
-        {data?.tasks.map((el) => (
-          <TaskItem
-            key={el.id}
-            task={el}
-            handleUpdateTask={handleUpdateTask}
-            handleDeleteTask={handleDeleteTask}
-            handleOpenEditModal={handleOpenEditModal}
-          />
-        ))}
-      </TaskItemsContainer>
-      <Pagination
-        showSizeChanger={false}
-        current={Number(get("page")) || 1}
-        pageSize={TASK_PER_PAGE}
-        total={data?.count}
-        onChange={(page) => handleChangePage(page)}
-      />
+      {isLoading ? (
+        <SpinContainer>
+          <Spin size="large" />
+        </SpinContainer>
+      ) : data?.tasks.length === 0 ? (
+        <Empty description="No tasks available" />
+      ) : (
+        <TaskItemsContainer>
+          {data?.tasks.map((el) => (
+            <TaskItem
+              key={el.id}
+              task={el}
+              handleUpdateTask={handleUpdateTask}
+              handleDeleteTask={handleDeleteTask}
+              handleOpenEditModal={handleOpenEditModal}
+            />
+          ))}
+        </TaskItemsContainer>
+      )}
+      {data?.count! > TASKS_PER_PAGE && (
+        <Pagination
+          showSizeChanger={false}
+          current={Number(get("page")) || 1}
+          pageSize={TASKS_PER_PAGE}
+          total={data?.count}
+          onChange={(page) => handleChangePage(page)}
+        />
+      )}
     </TaskContainer>
   );
 };

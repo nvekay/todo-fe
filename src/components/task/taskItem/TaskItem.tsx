@@ -1,9 +1,11 @@
 import {
   ButtonsContainer,
   CreatedDate,
+  StatusText,
   TaskItemBody,
   TaskItemContainer,
   TaskItemHeader,
+  TaskManagerContainer,
 } from "./TaskItem.style";
 import { Task } from "@lib/redux/task/types";
 import React from "react";
@@ -25,19 +27,25 @@ export const TaskItem: React.FC<Props> = ({
 }) => {
   return (
     <TaskItemContainer isCompleted={task.completed}>
-      <ButtonsContainer>
-        <Popconfirm
-          onConfirm={() => handleDeleteTask(task.id)}
-          title="Are you sure you want to delete the task?"
-        >
-          <Button icon={<DeleteOutlined />} />
-        </Popconfirm>
+      <TaskManagerContainer>
+        <StatusText>
+          Status: {task.completed ? "completed" : "uncompleted"}
+        </StatusText>
+        <ButtonsContainer>
+          <Popconfirm
+            onConfirm={() => handleDeleteTask(task.id)}
+            title="Are you sure you want to delete the task?"
+          >
+            <Button icon={<DeleteOutlined />} />
+          </Popconfirm>
 
-        <Button
-          onClick={() => handleOpenEditModal(task)}
-          icon={<EditOutlined />}
-        />
-      </ButtonsContainer>
+          <Button
+            onClick={() => handleOpenEditModal(task)}
+            icon={<EditOutlined />}
+          />
+        </ButtonsContainer>
+      </TaskManagerContainer>
+
       <TaskItemHeader>
         <Checkbox
           onChange={(e) =>

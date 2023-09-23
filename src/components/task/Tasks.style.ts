@@ -34,3 +34,10 @@ export const TaskItemsContainer = styled.div`
   align-items: stretch;
   justify-content: center;
 `;
+
+export const SpinContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;

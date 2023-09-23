@@ -80,8 +80,13 @@ export const EditTaskModal: React.FC<Props> = ({ onCancel, task }) => {
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
-          <div>{formik.errors.name ? formik.errors.name : null}</div>
+          <div>
+            {formik.touched.name && formik.errors.name
+              ? formik.errors.name
+              : null}
+          </div>
         </label>
         <label>
           Description:
@@ -90,9 +95,12 @@ export const EditTaskModal: React.FC<Props> = ({ onCancel, task }) => {
             name="description"
             value={formik.values.description}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <div>
-            {formik.errors.description ? formik.errors.description : null}
+            {formik.touched.description && formik.errors.description
+              ? formik.errors.description
+              : null}
           </div>
         </label>
         <Button

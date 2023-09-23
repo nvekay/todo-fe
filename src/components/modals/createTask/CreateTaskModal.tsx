@@ -33,6 +33,7 @@ export const CreateTaskModal: React.FC<Props> = ({ isOpen, onCancel }) => {
       createTask(values)
         .unwrap()
         .then((el) => {
+          formik.resetForm();
           onCancel();
           notification.open({
             type: "success",
@@ -69,8 +70,13 @@ export const CreateTaskModal: React.FC<Props> = ({ isOpen, onCancel }) => {
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
-          <div>{formik.errors.name ? formik.errors.name : null}</div>
+          <div>
+            {formik.touched.name && formik.errors.name
+              ? formik.errors.name
+              : null}
+          </div>
         </label>
         <label>
           Description:
@@ -79,9 +85,12 @@ export const CreateTaskModal: React.FC<Props> = ({ isOpen, onCancel }) => {
             name="description"
             value={formik.values.description}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <div>
-            {formik.errors.description ? formik.errors.description : null}
+            {formik.touched.description && formik.errors.description
+              ? formik.errors.description
+              : null}
           </div>
         </label>
         <Button type="primary" htmlType="submit">

@@ -9,6 +9,8 @@ export const CreatedDate = styled.p`
   color: #bfc1c5;
 `;
 
+export const StatusText = styled.span``;
+
 export const TaskItemContainer = styled.div<{ isCompleted: boolean }>`
   display: flex;
   flex-direction: column;
@@ -18,6 +20,17 @@ export const TaskItemContainer = styled.div<{ isCompleted: boolean }>`
   border-radius: 5px;
   width: 300px;
   gap: 15px;
+
+  ${StatusText} {
+    color: ${({ isCompleted }) => isCompleted && "#27ae60"};
+  }
+`;
+
+export const TaskManagerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 export const TaskItemHeader = styled.div`
@@ -32,8 +45,7 @@ export const TaskItemHeader = styled.div`
 
 export const ButtonsContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  width: 100%;
+
   gap: 4px;
 `;
 
